@@ -46,12 +46,9 @@ int main(int argc, char **argv) {
 
     } else if (vm.count("device")) {
 
-        std::cout << "Opening device: " << vm["device"].as<std::string>() << std::endl;
+        std::cerr << "Device: " << device << std::endl;
 
         device::lpm lpm = device::lpm::open(device);
-
-        std::cout << "val of fd: " << lpm.io.printfd() << std::endl;
-        std::cout << "user input: " << input << std::endl;
 
         if(lpm.isCommandPWM(input) == 0) {
             // handle PWM
