@@ -19,7 +19,7 @@ find_library(IRIS_LIBRARY NAMES iris libiris
 
 set(IRIS_LIBRARIES ${IRIS_LIBRARY})
 set(IRIS_INCLUDE_DIRS ${IRIS_INCLUDE_DIR})
-
+set(IRIS_LIBRARY_DIRS ${IRIS_INCLUDE_DIR}/../lib ${IRIS_INCLUDE_DIR}/../build)
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set IRIS_FOUND to TRUE
 # if all listed variables are TRUE
