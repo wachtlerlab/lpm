@@ -49,8 +49,9 @@ set(LINK_LIBS ${LINK_LIBS} ${YAMLCPP_LIBRARIES})
 # IRIS
 
 find_package(IRIS REQUIRED)
-include_directories (${IRIS_INCLUDE_DIRS})
-set (LINK_LIBS ${LINK_LIBS} ${IRIS_LIBRARIES})
+include_directories(${IRIS_INCLUDE_DIRS})
+link_directories(${IRIS_LIBRARY_DIRS})
+set(LINK_LIBS ${LINK_LIBS} ${IRIS_LIBRARIES})
 
 #########################################
 # Linux
@@ -67,15 +68,15 @@ endif()
 #########################################
 set(lpm_SOURCES lpm.cc)
 add_executable(lpm ${lpm_SOURCES})
-target_link_libraries(lpm iris)
+target_link_libraries(lpm ${LINK_LIBS})
 
-set(LEDPhotoSpectrum_SOURCES LEDPhotoSpectrum.cc)
+set(LEDPhotoSpectrum_SOURCES LEDPhotoSpectrum.cc cfg.cc)
 add_executable(lpm-LEDPhotoSpectrum ${LEDPhotoSpectrum_SOURCES})
-target_link_libraries(lpm-LEDPhotoSpectrum iris)
+target_link_libraries(lpm-LEDPhotoSpectrum ${LINK_LIBS})
 
-set(ledPWMthresholder_SOURCES ledPWMthresholder.cc)
+set(ledPWMthresholder_SOURCES ledPWMthresholder.cc cfg.cc)
 add_executable(lpm-ledPWMthresholder ${ledPWMthresholder_SOURCES})
-target_link_libraries(lpm-ledPWMthresholder iris)
+target_link_libraries(lpm-ledPWMthresholder ${LINK_LIBS})
 
 #########################################
 # installation
