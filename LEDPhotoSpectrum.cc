@@ -9,8 +9,11 @@
 #include <serial.h>
 #include <boost/program_options.hpp>
 #include <data.h>
-#include <lpm.h>
+
 #include <pr655.h>
+
+#include "lpm.h"
+#include "cfg.h"
 
 int main(int argc, char **argv) {
 
@@ -67,7 +70,7 @@ int main(int argc, char **argv) {
         /*
          * build the <LED Pin, Wavelength> map from YAML Config file
          */
-        iris::data::store store = iris::data::store::default_store();
+        const lpm::cfg store = lpm::cfg::default_cfg();
         const std::map<uint8_t, uint16_t> ledMap = store.lpm_leds();
 
         /*
