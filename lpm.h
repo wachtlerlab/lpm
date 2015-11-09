@@ -33,26 +33,6 @@ namespace device {
             io.send_data("shoot");
         }
 
-        int isCommandPWM(std::string cmd) {
-            std::string pwmCmd = "pwm";
-            return cmd.compare(0, pwmCmd.length(), pwmCmd);
-        }
-
-        int isCommandInfo(std::string cmd) {
-            std::string infoCmd = "info";
-            return cmd.compare(0, infoCmd.length(), infoCmd);
-        }
-
-        int isCommandReset(std::string cmd) {
-            std::string resetCmd = "reset";
-            return cmd.compare(0, resetCmd.length(), resetCmd);
-        }
-
-        int isCommandShoot(std::string cmd) {
-            std::string shootCmd = "shoot";
-            return cmd.compare(0, shootCmd.length(), shootCmd);
-        }
-
         void receiveArduinoOutput() {
 
             while(1) {
