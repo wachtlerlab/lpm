@@ -26,16 +26,21 @@ int main(int argc, char **argv) {
     opts.add_options()
             ("help",    "Flag for Help")
             ("device", po::value<std::string>(&device), "device file for aurdrino")
-            ("input", po::value<std::string>(&input), "Specify command (info, pwm, reset, shoot)");
+            ("input", po::value<std::string>(&input), "Specify command (info, pwm, reset, shoot)")
+            ("args",  po::value<std::vector<std::string>>(), "Arguments for command");
 
     po::positional_options_description pos;
-    pos.add("input", 1);
+    pos.add("input", 1).add("args", -1);
 
     po::variables_map vm;
+    std::vector<std::string> args;
 
     try {
-        po::store(po::command_line_parser(argc, argv).options(opts).positional(pos).run(), vm);
+        po::parsed_options parsed = po::command_line_parser(argc, argv).options(opts).positional(pos).run();
+        po::store(parsed, vm);
         po::notify(vm);
+        args = po::collect_unrecognized(parsed.options, po::include_positional);
+        args.erase(args.begin());
     } catch (const std::exception &e) {
         std::cerr << "Error while parsing commad line options: " << std::endl;
         std::cerr << "\t" << e.what() << std::endl;
@@ -54,40 +59,29 @@ int main(int argc, char **argv) {
 
         std::cout << std::endl;
 
-    } else if (vm.count("device")) {
-
-        std::cerr << "Device: " << device << std::endl;
-
-        device::lpm lpm = device::lpm::open(device);
-
-        if(lpm.isCommandPWM(input) == 0) {
-            // handle PWM
-            lpm.setPWM(input);
-
-        } else if(lpm.isCommandInfo(input) == 0) {
-            //handle info
-            lpm.getInfo();
-
-        } else if(lpm.isCommandReset(input) == 0) {
-            //handle reset
-            lpm.reset();
-
-        } else if(lpm.isCommandShoot(input) == 0) {
-            //handle shoot img
-            lpm.shoot();
-
-        } else {
-            std::cout <<"Error: Incorrect command! " << std::endl;
-            return -1;
-        }
-
-        std::cout  << "from arduino: " << std::endl;
-        lpm.receiveArduinoOutput();    //print stream from arduino
-
-
-    } else {
-        std::cout << "Not Enough Arguments. ./lpm --device <device file> --input <input>" << std::endl;
     }
+
+    std::cerr << "[D] Device: " << device << std::endl;
+    std::cerr << "[D] Input: \"" << input << "\"" << std::endl;
+
+    device::lpm lpm = device::lpm::open(device);
+
+    if (input == "pwm") {
+        std::cerr << "[D] args: " << args[0] << std::endl;
+        lpm.setPWM(args[0]);
+    } else if(input == "info") {
+        lpm.getInfo();
+    } else if(input == "reset") {
+        lpm.reset();
+    } else if(input == "shoot") {
+        lpm.shoot();
+    } else {
+        std::cout <<"[E] Unkown command! " << std::endl;
+        return -1;
+    }
+
+    std::cout  << "from arduino: " << std::endl;
+    lpm.receiveArduinoOutput();    //print stream from arduino
 
     return 0;
 }
