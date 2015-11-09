@@ -28,9 +28,19 @@ int main(int argc, char **argv) {
             ("device", po::value<std::string>(&device), "device file for aurdrino")
             ("input", po::value<std::string>(&input), "Specify command (info, pwm, reset, shoot)");
 
+    po::positional_options_description pos;
+    pos.add("input", 1);
+
     po::variables_map vm;
-    po::store(po::command_line_parser(argc, argv).options(opts).run(), vm);
-    po::notify(vm);
+
+    try {
+        po::store(po::command_line_parser(argc, argv).options(opts).positional(pos).run(), vm);
+        po::notify(vm);
+    } catch (const std::exception &e) {
+        std::cerr << "Error while parsing commad line options: " << std::endl;
+        std::cerr << "\t" << e.what() << std::endl;
+        return 1;
+    }
 
     if(vm.count("help")) {
         //show program options
