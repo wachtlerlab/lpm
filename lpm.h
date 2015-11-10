@@ -17,6 +17,12 @@ namespace device {
             return lpm;
         }
 
+        void led(uint8_t pin, uint16_t pwm) {
+            std::stringstream cmd;
+            cmd << "pwm " << pin << "," << pwm;
+            io.send_data(cmd.str());
+        }
+
         void setPWM(std::string cmd) {
             io.send_data(cmd);
         }
