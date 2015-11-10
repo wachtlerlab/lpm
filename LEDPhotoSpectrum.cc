@@ -91,12 +91,10 @@ int main(int argc, char **argv) {
         for(auto elem : ledMap)    {
 
             std::cout << "$: Turning on " << unsigned(elem.second) << "nm LED on pin " << unsigned(elem.first) << " with PWM: " << ledPwmMap.at(elem.second) <<std::endl;
-            std::string pwmCmd = "pwm " + std::to_string(unsigned(elem.first)) + "," + std::to_string(ledPwmMap.at(elem.second)) + "";
-
             /*
              * Turn on LED
              */
-            lpm.setPWM(pwmCmd);
+            lpm.led(elem.first, ledPwmMap.at(elem.second));
             std::cout << "---------------------------------------" << std::endl;
             std::cout  << "From arduino after turning LED on: " << std::endl;
             lpm.receiveArduinoOutput();    //print stream from arduino

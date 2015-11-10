@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
                     /*
                      * Turn on LED
                      */
-                    lpm.setPWM(pwmCmd);
+                    lpm.led(elem.first, previousPWMVal);
                     std::cout << "---------------------------------------" << std::endl;
                     std::cout  << "From arduino after turning LED on: " << std::endl;
                     lpm.receiveArduinoOutput();    //print stream from arduino
