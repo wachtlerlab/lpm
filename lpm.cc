@@ -16,6 +16,15 @@
 // pwm 10,2000  (Turning on one LED on particular pin with pwm)
 // shoot        (For triggering IR LED to take picture from camera)
 
+static int
+cmd_pwm(device::lpm &lpm, const std::vector<std::string> &args)
+{
+    std::cerr << "[D] args: " << args[0] << std::endl;
+    lpm.setPWM(args[0]);
+    return 0;
+}
+
+
 int main(int argc, char **argv) {
     namespace po = boost::program_options;
 
@@ -67,8 +76,7 @@ int main(int argc, char **argv) {
     device::lpm lpm = device::lpm::open(device);
 
     if (input == "pwm") {
-        std::cerr << "[D] args: " << args[0] << std::endl;
-        lpm.setPWM(args[0]);
+        cmd_pwm(lpm, args);
     } else if(input == "info") {
         lpm.getInfo();
     } else if(input == "reset") {
