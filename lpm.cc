@@ -19,8 +19,21 @@
 static int
 cmd_pwm(device::lpm &lpm, const std::vector<std::string> &args)
 {
-    std::cerr << "[D] args: " << args[0] << std::endl;
-    lpm.setPWM(args[0]);
+    namespace po = boost::program_options;
+
+    uint16_t pwm;
+    uint8_t pin;
+
+    po::options_description pwm_opts("pwm options");
+    pwm_opts.add_options()
+            ("led", po::value<uint8_t>(&pin), "LED")
+            ("pwm", po::value<uint16_t>(&pwm), "PIN");
+
+    po::variables_map vm;
+    po::store(po::command_line_parser(args).options(pwm_opts).run(), vm);
+
+    std::cerr << "[D] led: " << pin << " pwm: " <<  pwm << std::endl;
+    lpm.led(pin, pwm);
     return 0;
 }
 
