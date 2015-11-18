@@ -27,16 +27,35 @@ namespace device {
             io.send_data(cmd);
         }
 
-        void getInfo() {
-            io.send_data("info");
+        std::string getInfo() {
+            std::string info = send_and_receive("info");
+            return info;
         }
 
         void reset() {
-            io.send_data("reset");
+            send_and_receive("reset");
         }
 
         void shoot() {
-            io.send_data("shoot");
+            send_and_receive("shoot");
+        }
+
+        std::string send_and_receive(const std::string &data) {
+            io.send_data(data);
+
+            std::stringstream response;
+
+            while (true) {
+                std::string data = io.recv_line(1000);
+
+                if (data == "\u0004") {
+                    break;
+                }
+
+                response << data << "\n";
+            }
+
+            return response.str();
         }
 
         void receiveArduinoOutput() {
@@ -45,7 +64,7 @@ namespace device {
                 std::string data = io.recv_line(1000);
                 std::cout << data << std::endl;
 
-                if(data == std::string("*")) {
+                if (data == std::string("\0004")) {
                     break;
                 }
             }
