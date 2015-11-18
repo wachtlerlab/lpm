@@ -7,6 +7,8 @@
 #include <serial.h>
 #include <boost/program_options.hpp>
 #include <data.h>
+#include <iostream>
+#include <iterator>
 
 #include "lpm.h"
 
@@ -78,6 +80,7 @@ int main(int argc, char **argv) {
         std::cout << "reset        (for resetting and turning off all LEDs that are on)" << std::endl;
         std::cout << "pwm 10,2000  (Turning on one LED on particular pin with pwm)" << std::endl;
         std::cout << "shoot        (For triggering IR LED to take picture from camera)" << std::endl;
+        std::cout << "raw           Send raw data to lpm" << std::endl;
 
         std::cout << std::endl;
 
@@ -96,13 +99,16 @@ int main(int argc, char **argv) {
         lpm.reset();
     } else if(input == "shoot") {
         lpm.shoot();
+    } else if (input == "raw") {
+        std::stringstream data;
+        std::copy(args.cbegin(), args.cend(), std::ostream_iterator<std::string>(data, " "));
+        std::cerr << "[D] [" << data.str() << "]" << std::endl;
+        std::string response = lpm.send_and_receive(data.str());
+        std::cout << "[R] [" << response << "]" << std::endl;
     } else {
         std::cout <<"[E] Unkown command! " << std::endl;
         return -1;
     }
-
-    std::cout  << "from arduino: " << std::endl;
-    lpm.receiveArduinoOutput();    //print stream from arduino
 
     return 0;
 }
